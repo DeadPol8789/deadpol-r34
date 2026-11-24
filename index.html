@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DeadPol R34 - a top-down traffic-dodging game built with plain HTML, CSS, JavaScript and Canvas.">
+
+    <title>DeadPol R34</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/game.js" defer></script>
+</head>
+<body>
+    <main class="game-container">
+        <header class="hud">
+            <h1>DeadPol <span>R34</span></h1>
+
+            <dl class="stats">
+                <div class="stat">
+                    <dt>Score</dt>
+                    <dd><span id="scoreValue">0</span> m</dd>
+                </div>
+                <div class="stat">
+                    <dt>Speed</dt>
+                    <dd><span id="speedValue">0</span> km/h</dd>
+                </div>
+                <div class="stat">
+                    <dt>Best</dt>
+                    <dd><span id="bestValue">0</span> m</dd>
+                </div>
+            </dl>
+        </header>
+
+        <div class="stage">
+            <canvas id="gameCanvas" width="400" height="700">
+                Your browser does not support the HTML5 canvas tag.
+            </canvas>
+
+            <section id="startScreen" class="overlay">
+                <h2>Dodge the traffic</h2>
+                <p>Stay on the road and survive as long as you can. Traffic gets faster the further you drive.</p>
+
+                <ul class="controls">
+                    <li><span class="keys"><kbd>&larr;</kbd> <kbd>&rarr;</kbd></span> Steer</li>
+                    <li><span class="keys"><kbd>P</kbd></span> Pause</li>
+                    <li><span class="keys"><kbd>Enter</kbd></span> Start</li>
+                </ul>
+
+                <button id="startButton" type="button">Start</button>
+            </section>
+
+            <section id="pauseScreen" class="overlay" hidden>
+                <h2>Paused</h2>
+                <p>Press <kbd>P</kbd> or <kbd>Enter</kbd> to keep driving.</p>
+
+                <button id="resumeButton" type="button">Resume</button>
+            </section>
+
+            <section id="gameOverScreen" class="overlay" aria-live="polite" hidden>
+                <h2>Game Over</h2>
+                <p id="newBestBadge" class="badge" hidden>New best!</p>
+
+                <p class="final-score"><span id="finalScoreValue">0</span> m</p>
+                <p>Best: <span id="finalBestValue">0</span> m</p>
+
+                <button id="restartButton" type="button">Play again</button>
+                <p class="small">or press <kbd>Enter</kbd></p>
+            </section>
+        </div>
+
+        <p class="hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> steer &middot; <kbd>P</kbd> pause</p>
+    </main>
+</body>
+</html>

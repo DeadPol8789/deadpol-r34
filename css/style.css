@@ -1,0 +1,257 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --background: #0b0d12;
+    --panel: #151923;
+    --line: #2a3142;
+    --text: #f4f6fb;
+    --muted: #a3acc0;
+    --accent: #3b82f6;
+    --accent-strong: #60a5fa;
+    --danger: #f87171;
+
+    /*
+        The canvas keeps its 4:7 shape. Its width is the smallest of:
+        its natural size, the window width, and the width that still lets
+        the whole game fit in the window height (150px is the space used
+        by the HUD and the hint line).
+    */
+    --stage-width: max(200px, min(400px, 94vw, calc((100vh - 150px) * 4 / 7)));
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+    background-color: var(--background);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: var(--stage-width);
+
+    /* Lets the text inside scale with the game width (cqw units). */
+    container-type: inline-size;
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+h1 {
+    font-size: clamp(18px, 7cqw, 28px);
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+}
+
+h1 span {
+    color: var(--accent-strong);
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.stat {
+    padding: 5px 4px;
+    background-color: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    text-align: center;
+}
+
+.stat dt {
+    font-size: clamp(9px, 2.8cqw, 11px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.stat dd {
+    font-size: clamp(12px, 4.4cqw, 17px);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ---------- Canvas and overlays ---------- */
+
+.stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 7;
+
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #2b2b2b;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(8px, 3.5cqw, 14px);
+    padding: 7cqw;
+
+    background-color: rgba(8, 10, 16, 0.84);
+    text-align: center;
+    font-size: clamp(12px, 3.9cqw, 15px);
+    line-height: 1.45;
+}
+
+/* Without this, "display: flex" above would win over the hidden attribute. */
+.overlay[hidden],
+.badge[hidden] {
+    display: none;
+}
+
+.overlay h2 {
+    font-size: clamp(20px, 8.5cqw, 34px);
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+/* Lighter than the other overlays so the crash stays visible behind it. */
+#gameOverScreen {
+    background-color: rgba(8, 10, 16, 0.7);
+}
+
+#gameOverScreen h2 {
+    color: var(--danger);
+}
+
+.overlay p {
+    color: var(--muted);
+}
+
+.controls {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    text-align: left;
+}
+
+.controls li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.keys {
+    display: inline-flex;
+    justify-content: flex-end;
+    gap: 4px;
+    min-width: 5.2em;
+}
+
+kbd {
+    display: inline-block;
+    min-width: 1.7em;
+    padding: 1px 6px;
+
+    background-color: #232a3a;
+    border: 1px solid #45506a;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.92em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.final-score {
+    font-size: clamp(26px, 12cqw, 46px);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.overlay p.final-score {
+    color: var(--text);
+}
+
+.badge {
+    padding: 2px 10px;
+    background-color: #facc15;
+    border-radius: 999px;
+    font-size: 0.85em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.overlay p.badge {
+    color: #1a1400;
+}
+
+.small {
+    font-size: 0.88em;
+}
+
+button {
+    padding: 0.6em 1.7em;
+
+    background-color: var(--accent);
+    border: none;
+    border-radius: 6px;
+
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--accent-strong);
+}
+
+button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: clamp(11px, 3.4cqw, 13px);
+}
