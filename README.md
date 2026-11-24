@@ -108,3 +108,8 @@ This project is also a learning exercise focused on JavaScript fundamentals and 
 ## Author
 
 Created by [DeadPol8789](https://github.com/DeadPol8789).
+
+
+## License
+
+The game source code (HTML, CSS, and JavaScript) is licensed under the [MIT License](LICENSE). The screenshot in `assets/images/gameplay.png` is excluded from this license.
