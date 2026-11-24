@@ -100,6 +100,11 @@ const hud = {
     newBestBadge: document.getElementById("newBestBadge")
 };
 
+const steerButtons = {
+    left: document.getElementById("steerLeft"),
+    right: document.getElementById("steerRight")
+};
+
 const screens = {
     start: document.getElementById("startScreen"),
     pause: document.getElementById("pauseScreen"),
@@ -140,9 +145,102 @@ const keys = {
     right: false
 };
 
+// On-screen steering buttons. Kept apart from "keys" so that releasing
+// a key cannot cancel a held button, or the other way round.
+const touch = {
+    left: false,
+    right: false
+};
+
+// Which finger (pointer id) is holding each button, or null.
+const touchPointers = {
+    left: null,
+    right: null
+};
+
 /* ==========================================================
    3. Input
    ========================================================== */
+
+// Pointer events cover fingers, pens and the mouse with the same code.
+function setupSteerButton(direction) {
+    const button = steerButtons[direction];
+
+    button.addEventListener("pointerdown", (event) => {
+        const canSteer = game.state === "playing" && !game.paused;
+
+        // Ignore right clicks and a second finger on the same button.
+        if (!canSteer || event.button !== 0 || touchPointers[direction] !== null) {
+            return;
+        }
+
+        event.preventDefault();
+
+        touchPointers[direction] = event.pointerId;
+        touch[direction] = true;
+        button.classList.add("is-held");
+
+        // Capture: the button keeps receiving this finger's events even
+        // if it slides off the button, so the release is never missed.
+        try {
+            button.setPointerCapture(event.pointerId);
+        } catch (error) {
+            // Steering still works without capture.
+        }
+    });
+
+    // Finger lifted, touch cancelled by the system (a call, a gesture),
+    // or capture lost: all three mean "stop steering".
+    const release = (event) => {
+        if (event.pointerId === touchPointers[direction]) {
+            releaseSteer(direction);
+        }
+    };
+
+    button.addEventListener("pointerup", release);
+    button.addEventListener("pointercancel", release);
+    button.addEventListener("lostpointercapture", release);
+
+    // A long press must not open the browser's context menu.
+    button.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    });
+}
+
+function releaseSteer(direction) {
+    const button = steerButtons[direction];
+    const pointerId = touchPointers[direction];
+
+    touch[direction] = false;
+    touchPointers[direction] = null;
+    button.classList.remove("is-held");
+
+    if (pointerId !== null && button.hasPointerCapture(pointerId)) {
+        button.releasePointerCapture(pointerId);
+    }
+}
+
+// Forgets every held key and button. Called whenever the round stops or
+// starts (pause, focus loss, crash, restart), because the matching
+// "key up" or "finger up" event may never arrive in those moments.
+function clearHeldInput() {
+    keys.left = false;
+    keys.right = false;
+
+    releaseSteer("left");
+    releaseSteer("right");
+}
+
+// The steering buttons only work during a round that is not paused.
+function updateSteerButtons() {
+    const canSteer = game.state === "playing" && !game.paused;
+
+    steerButtons.left.disabled = !canSteer;
+    steerButtons.right.disabled = !canSteer;
+}
+
+setupSteerButton("left");
+setupSteerButton("right");
 
 window.addEventListener("keydown", (event) => {
     if (event.code === "ArrowLeft" || event.code === "KeyA") {
@@ -202,10 +300,9 @@ window.addEventListener("keyup", (event) => {
 });
 
 // When the window loses focus the browser never sends "keyup", so a key
-// would stay "pressed" forever. Release the keys and pause the round.
+// would stay "pressed" forever. Release everything and pause the round.
 function handleFocusLoss() {
-    keys.left = false;
-    keys.right = false;
+    clearHeldInput();
 
     if (game.state === "playing") {
         setPaused(true);
@@ -253,8 +350,7 @@ function startGame() {
     player.x = VIEW_WIDTH / 2 - player.width / 2;
     player.tilt = 0;
 
-    keys.left = false;
-    keys.right = false;
+    clearHeldInput();
     lastFrameTime = null;
 
     showScreen(null);
@@ -263,6 +359,7 @@ function startGame() {
 
 function setPaused(paused) {
     game.paused = paused;
+    clearHeldInput();
     lastFrameTime = null;
     showScreen(paused ? "pause" : null);
 }
@@ -272,6 +369,7 @@ function endGame() {
     game.paused = false;
     game.gameOverAt = performance.now();
     game.crashFlash = 1;
+    clearHeldInput();
 
     const isNewBest = game.score > game.best;
 
@@ -293,6 +391,10 @@ function showScreen(name) {
     for (const key in screens) {
         screens[key].hidden = key !== name;
     }
+
+    // Every change of state goes through here, so this is the one place
+    // that switches the steering buttons on and off.
+    updateSteerButtons();
 }
 
 // localStorage can be blocked (private mode, file:// rules), so the game
@@ -378,11 +480,13 @@ function update(dt) {
 function updatePlayer(dt) {
     let direction = 0;
 
-    if (keys.left) {
+    // Keyboard and touch buttons steer the same way; holding both
+    // directions at once cancels out.
+    if (keys.left || touch.left) {
         direction -= 1;
     }
 
-    if (keys.right) {
+    if (keys.right || touch.right) {
         direction += 1;
     }
 

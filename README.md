@@ -59,6 +59,12 @@ A `game.state` value (`"start"`, `"playing"`, `"gameover"`) decides what `update
 
 If the window loses focus or the tab is hidden, the pressed keys are released and the round is paused, so nothing gets stuck and nothing jumps when you come back.
 
+### Input
+
+The keyboard and the on-screen arrows feed the same steering code. The arrows use Pointer Events, so one handler covers fingers, pens and the mouse. A button steers from `pointerdown` until `pointerup`, `pointercancel` or `lostpointercapture`, and pointer capture keeps the hold alive if the finger slides off the button. Every held key and button is cleared on pause, focus loss, crash and restart.
+
+The on-screen arrows appear only on devices with a touchscreen. In portrait they sit under the road; on a phone held sideways they move to the left and right edges of the screen.
+
 ### Traffic
 
 Traffic appears in **waves** (rows of one or two vehicles), spaced by distance travelled instead of by frame count. Three rules keep it fair:
