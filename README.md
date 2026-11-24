@@ -12,7 +12,7 @@ You drive an R34-inspired coupe down a three-lane road. Traffic keeps coming, th
 
 The game is a static page, so there is nothing to install.
 
-- **Online:** play it at <https://deadpol8789.github.io/deadpol-r34/> (keyboard required).
+- **Online:** play it at <https://deadpol8789.github.io/deadpol-r34/> with touch or keyboard.
 - **Locally:** open `index.html` in a modern browser (Chrome, Edge, Firefox).
 - **With a local server** (optional, closer to how it will be hosted):
 
@@ -32,7 +32,7 @@ All paths are relative. The demo is served by GitHub Pages straight from the roo
 | `Enter` or `Space` | Start, resume, play again |
 | `P` or `Esc` | Pause / resume |
 
-The buttons on the start, pause, and Game Over screens can also be clicked. Touch controls are not implemented yet.
+On a touchscreen, tap **Start** and hold either on-screen arrow to steer. Release it to stop steering. Tap **Play again** after a crash or **Resume** after returning to a paused game. You can also click the screen buttons with a mouse.
 
 ## Scoring
 
@@ -97,7 +97,6 @@ All graphics are drawn with Canvas shapes written for this project. The player c
 
 ## Possible next steps
 
-- Touch controls for phones
 - Sound effects
 - More vehicle types and scenery
 

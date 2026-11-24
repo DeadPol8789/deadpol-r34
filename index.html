@@ -45,13 +45,14 @@
                     <li><span class="keys"><kbd>P</kbd></span> Pause</li>
                     <li><span class="keys"><kbd>Enter</kbd></span> Start</li>
                 </ul>
+                <p class="touch-hint">Hold an arrow button to steer.</p>
 
                 <button id="startButton" type="button">Start</button>
             </section>
 
             <section id="pauseScreen" class="overlay" hidden>
                 <h2>Paused</h2>
-                <p>Press <kbd>P</kbd> or <kbd>Enter</kbd> to keep driving.</p>
+                <p class="keyboard-hint">Press <kbd>P</kbd> or <kbd>Enter</kbd> to keep driving.</p>
 
                 <button id="resumeButton" type="button">Resume</button>
             </section>
@@ -64,11 +65,16 @@
                 <p>Best: <span id="finalBestValue">0</span> m</p>
 
                 <button id="restartButton" type="button">Play again</button>
-                <p class="small">or press <kbd>Enter</kbd></p>
+                <p class="small keyboard-hint">or press <kbd>Enter</kbd></p>
             </section>
         </div>
 
-        <p class="hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> steer &middot; <kbd>P</kbd> pause</p>
+        <div class="touch-controls" role="group" aria-label="Steering controls">
+            <button id="steerLeft" type="button" aria-label="Steer left" disabled>&larr;</button>
+            <button id="steerRight" type="button" aria-label="Steer right" disabled>&rarr;</button>
+        </div>
+
+        <p class="hint keyboard-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> steer &middot; <kbd>P</kbd> pause</p>
     </main>
 </body>
 </html>
