@@ -2,13 +2,18 @@
 
 A 2D top-down traffic-dodging game built with plain HTML, CSS, JavaScript, and HTML5 Canvas. No frameworks, no build step, no external assets.
 
+**[Play the live demo](https://deadpol8789.github.io/deadpol-r34/)**
+
 You drive an R34-inspired coupe down a three-lane road. Traffic keeps coming, the road keeps getting faster, and the round ends on the first crash.
+
+<img src="assets/images/gameplay.png" alt="Gameplay: a blue coupe on a three-lane road with a van, a truck and a car ahead" width="300">
 
 ## How to launch
 
 The game is a static page, so there is nothing to install.
 
-- **Quickest:** open `index.html` in a modern browser (Chrome, Edge, Firefox).
+- **Online:** play it at <https://deadpol8789.github.io/deadpol-r34/> (keyboard required).
+- **Locally:** open `index.html` in a modern browser (Chrome, Edge, Firefox).
 - **With a local server** (optional, closer to how it will be hosted):
 
   ```
@@ -17,7 +22,7 @@ The game is a static page, so there is nothing to install.
 
   Then open `http://localhost:8000`. The VS Code "Live Server" extension works too.
 
-All paths are relative, so the project can be published as it is with GitHub Pages.
+All paths are relative. The demo is served by GitHub Pages straight from the root of the `main` branch, with no build step.
 
 ## Controls
 
@@ -76,7 +81,7 @@ The collision rectangles are a few pixels smaller than the drawings, so a near m
 index.html      Page, HUD and overlay screens
 css/style.css   Layout and responsive sizing
 js/game.js      Game logic and Canvas drawing
-assets/         Reserved for future assets (currently unused)
+assets/images/  README screenshot (the game itself loads no image files)
 ```
 
 ## Art and assets
